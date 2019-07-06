@@ -1,0 +1,3 @@
+version: "1"
+domain: https://cloudnativedays.jp
+repo: github.com/cloudnativedaysjp/showks-keycloak-user-operator
