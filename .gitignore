@@ -22,4 +22,4 @@ bin
 *.swp
 *.swo
 *~
-keycloak*
+keycloak-6.0.1*
