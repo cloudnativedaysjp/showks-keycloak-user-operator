@@ -27,12 +27,14 @@ import (
 type KeyCloakUserSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	UserName string `json:"username,omitempty"`
 }
 
 // KeyCloakUserStatus defines the observed state of KeyCloakUser
 type KeyCloakUserStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	ID string
 }
 
 // +genclient
@@ -40,6 +42,7 @@ type KeyCloakUserStatus struct {
 
 // KeyCloakUser is the Schema for the keycloakusers API
 // +k8s:openapi-gen=true
+// +kubebuilder:subresource:status
 type KeyCloakUser struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

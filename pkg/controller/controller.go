@@ -17,6 +17,7 @@ limitations under the License.
 package controller
 
 import (
+	"fmt"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -25,6 +26,7 @@ var AddToManagerFuncs []func(manager.Manager) error
 
 // AddToManager adds all Controllers to the Manager
 func AddToManager(m manager.Manager) error {
+	fmt.Println("AddToManager")
 	for _, f := range AddToManagerFuncs {
 		if err := f(m); err != nil {
 			return err

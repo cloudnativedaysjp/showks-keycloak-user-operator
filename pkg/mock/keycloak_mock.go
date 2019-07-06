@@ -10,31 +10,31 @@ import (
 	reflect "reflect"
 )
 
-// MockKeyCloakInterface is a mock of KeyCloakInterface interface
-type MockKeyCloakInterface struct {
+// MockKeyCloakClientInterface is a mock of KeyCloakClientInterface interface
+type MockKeyCloakClientInterface struct {
 	ctrl     *gomock.Controller
-	recorder *MockKeyCloakInterfaceMockRecorder
+	recorder *MockKeyCloakClientInterfaceMockRecorder
 }
 
-// MockKeyCloakInterfaceMockRecorder is the mock recorder for MockKeyCloakInterface
-type MockKeyCloakInterfaceMockRecorder struct {
-	mock *MockKeyCloakInterface
+// MockKeyCloakClientInterfaceMockRecorder is the mock recorder for MockKeyCloakClientInterface
+type MockKeyCloakClientInterfaceMockRecorder struct {
+	mock *MockKeyCloakClientInterface
 }
 
-// NewMockKeyCloakInterface creates a new mock instance
-func NewMockKeyCloakInterface(ctrl *gomock.Controller) *MockKeyCloakInterface {
-	mock := &MockKeyCloakInterface{ctrl: ctrl}
-	mock.recorder = &MockKeyCloakInterfaceMockRecorder{mock}
+// NewMockKeyCloakClientInterface creates a new mock instance
+func NewMockKeyCloakClientInterface(ctrl *gomock.Controller) *MockKeyCloakClientInterface {
+	mock := &MockKeyCloakClientInterface{ctrl: ctrl}
+	mock.recorder = &MockKeyCloakClientInterfaceMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockKeyCloakInterface) EXPECT() *MockKeyCloakInterfaceMockRecorder {
+func (m *MockKeyCloakClientInterface) EXPECT() *MockKeyCloakClientInterfaceMockRecorder {
 	return m.recorder
 }
 
 // GetUsers mocks base method
-func (m *MockKeyCloakInterface) GetUsers(realm string, param gocloak.GetUsersParams) (*[]gocloak.User, error) {
+func (m *MockKeyCloakClientInterface) GetUsers(realm string, param gocloak.GetUsersParams) (*[]gocloak.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUsers", realm, param)
 	ret0, _ := ret[0].(*[]gocloak.User)
@@ -43,27 +43,43 @@ func (m *MockKeyCloakInterface) GetUsers(realm string, param gocloak.GetUsersPar
 }
 
 // GetUsers indicates an expected call of GetUsers
-func (mr *MockKeyCloakInterfaceMockRecorder) GetUsers(realm, param interface{}) *gomock.Call {
+func (mr *MockKeyCloakClientInterfaceMockRecorder) GetUsers(realm, param interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsers", reflect.TypeOf((*MockKeyCloakInterface)(nil).GetUsers), realm, param)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsers", reflect.TypeOf((*MockKeyCloakClientInterface)(nil).GetUsers), realm, param)
+}
+
+// GetUserByID mocks base method
+func (m *MockKeyCloakClientInterface) GetUserByID(realm, id string) (*gocloak.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserByID", realm, id)
+	ret0, _ := ret[0].(*gocloak.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserByID indicates an expected call of GetUserByID
+func (mr *MockKeyCloakClientInterfaceMockRecorder) GetUserByID(realm, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByID", reflect.TypeOf((*MockKeyCloakClientInterface)(nil).GetUserByID), realm, id)
 }
 
 // CreateUser mocks base method
-func (m *MockKeyCloakInterface) CreateUser(realm string, user gocloak.User) error {
+func (m *MockKeyCloakClientInterface) CreateUser(realm string, user gocloak.User) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", realm, user)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateUser indicates an expected call of CreateUser
-func (mr *MockKeyCloakInterfaceMockRecorder) CreateUser(realm, user interface{}) *gomock.Call {
+func (mr *MockKeyCloakClientInterfaceMockRecorder) CreateUser(realm, user interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockKeyCloakInterface)(nil).CreateUser), realm, user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockKeyCloakClientInterface)(nil).CreateUser), realm, user)
 }
 
 // DeleteUser mocks base method
-func (m *MockKeyCloakInterface) DeleteUser(realm, id string) error {
+func (m *MockKeyCloakClientInterface) DeleteUser(realm, id string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteUser", realm, id)
 	ret0, _ := ret[0].(error)
@@ -71,7 +87,7 @@ func (m *MockKeyCloakInterface) DeleteUser(realm, id string) error {
 }
 
 // DeleteUser indicates an expected call of DeleteUser
-func (mr *MockKeyCloakInterfaceMockRecorder) DeleteUser(realm, id interface{}) *gomock.Call {
+func (mr *MockKeyCloakClientInterfaceMockRecorder) DeleteUser(realm, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockKeyCloakInterface)(nil).DeleteUser), realm, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockKeyCloakClientInterface)(nil).DeleteUser), realm, id)
 }
