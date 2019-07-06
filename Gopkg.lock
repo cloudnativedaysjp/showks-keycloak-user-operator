@@ -10,6 +10,17 @@
   version = "v0.40.0"
 
 [[projects]]
+  digest = "1:9a665a214ca7e2a7179666cd90f1570095fd3b1c06aafabdccee62c4df212c23"
+  name = "github.com/Nerzal/gocloak"
+  packages = [
+    ".",
+    "pkg/jwx",
+  ]
+  pruneopts = "T"
+  revision = "ffb03da972d73b53974815bc3862fab119d388c8"
+  version = "v2.1.0"
+
+[[projects]]
   digest = "1:464aef731a5f82ded547c62e249a2e9ec59fbbc9ddab53cda7b9857852630a61"
   name = "github.com/appscode/jsonpatch"
   packages = ["."]
@@ -32,6 +43,14 @@
   pruneopts = "T"
   revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
   version = "v1.1.1"
+
+[[projects]]
+  digest = "1:6b014c67cb522566c30ef02116f9acb50cd60954708cf92c6654e2985696db18"
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
 
 [[projects]]
   digest = "1:4c9fb95cf096078841e90a4231b3d2ce8f0a306323ef0e363b4cbdcc2e449aae"
@@ -462,6 +481,7 @@
     "http2",
     "http2/hpack",
     "idna",
+    "publicsuffix",
   ]
   pruneopts = "T"
   revision = "3b0461eec859c4b73bb64fdc8285971fd33e3938"
@@ -592,6 +612,14 @@
   pruneopts = "T"
   revision = "d2d2541c53f18d2a059457998ce2876cc8e67cbf"
   version = "v0.9.1"
+
+[[projects]]
+  digest = "1:0e2b287089d3f5f286d556e7a78d11df072d172c3c452eebf9ad4c790fb2709c"
+  name = "gopkg.in/resty.v1"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "fa5875c0caa5c260ab78acec5a244215a730247f"
+  version = "v1.12.0"
 
 [[projects]]
   branch = "v1"
@@ -923,6 +951,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/Nerzal/gocloak",
     "github.com/emicklei/go-restful",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",

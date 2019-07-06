@@ -1,3 +1,7 @@
+*.orig
+
+# Other stuff aslong as i'm to lazy to use environment variables
+*.secret.go
 
 # Binaries for programs and plugins
 *.exe
@@ -5,7 +9,6 @@
 *.dll
 *.so
 *.dylib
-bin
 
 # Test binary, build with `go test -c`
 *.test
@@ -13,13 +16,4 @@ bin
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# Kubernetes Generated files - skip generated files, except for vendored files
-
-!vendor/**/zz_generated.*
-
-# editor and IDE paraphernalia
-.idea
-*.swp
-*.swo
-*~
-keycloak*
+\.idea/
