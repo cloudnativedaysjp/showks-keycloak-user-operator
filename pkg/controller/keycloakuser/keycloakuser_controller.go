@@ -113,7 +113,6 @@ type ReconcileKeyCloakUser struct {
 // +kubebuilder:rbac:groups=showks.cloudnativedays.jp,resources=keycloakusers/status,verbs=get;update;patch
 func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	fmt.Println("Reconcile")
-	kcRealm := os.Getenv("KEYCLOAK_REALM")
 	// Fetch the KeyCloakUser instance
 	instance := &showksv1beta1.KeyCloakUser{}
 	err := r.Get(context.TODO(), request.NamespacedName, instance)
@@ -137,7 +136,7 @@ func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.
 	var user *gocloak.User
 	param := gocloak.GetUsersParams{Username: instance.Spec.UserName}
 	fmt.Printf("param: %+v\n", param)
-	users, err := r.kcClient.GetUsers(kcRealm, param)
+	users, err := r.kcClient.GetUsers(instance.Spec.Realm, param)
 	if err != nil {
 		return reconcile.Result{}, err
 	}
@@ -146,11 +145,11 @@ func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.
 		userParam := gocloak.User{
 			Username: instance.Spec.UserName,
 		}
-		id, err := r.kcClient.CreateUser(kcRealm, userParam)
+		id, err := r.kcClient.CreateUser(instance.Spec.Realm, userParam)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
-		user, err = r.kcClient.GetUserByID(kcRealm, id)
+		user, err = r.kcClient.GetUserByID(instance.Spec.Realm, id)
 		if err != nil {
 			return reconcile.Result{}, err
 		}

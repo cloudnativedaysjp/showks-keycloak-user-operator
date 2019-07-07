@@ -30,10 +30,14 @@ spec:
           type: object
         spec:
           properties:
+            realm:
+              type: string
             username:
               description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
                 Important: Run "make" to regenerate code after modifying this file'
               type: string
+          required:
+          - realm
           type: object
         status:
           type: object
