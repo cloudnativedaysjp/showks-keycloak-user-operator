@@ -81,8 +81,9 @@ func TestReconcile(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: showksv1beta1.KeyCloakUserSpec{
-			UserName: userName,
-			Realm:    realm,
+			UserName:           userName,
+			Realm:              realm,
+			PasswordSecretName: "test",
 		},
 	}
 
