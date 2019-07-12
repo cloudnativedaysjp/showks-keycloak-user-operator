@@ -159,7 +159,7 @@ func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.
 		}
 
 		passwordSecret := corev1.Secret{}
-		err = r.Get(context.TODO(), types.NamespacedName{Name: "test", Namespace: "default"}, &passwordSecret)
+		err = r.Get(context.TODO(), types.NamespacedName{Name: "test", Namespace: instance.Namespace}, &passwordSecret)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
