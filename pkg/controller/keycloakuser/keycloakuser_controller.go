@@ -23,8 +23,10 @@ import (
 	showksv1beta1 "github.com/cloudnativedaysjp/showks-keycloak-user-operator/pkg/apis/showks/v1beta1"
 	"github.com/cloudnativedaysjp/showks-keycloak-user-operator/pkg/keycloak"
 	appsv1 "k8s.io/api/apps/v1"
+	"k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	"os"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
@@ -144,12 +146,27 @@ func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.
 	if len(*users) == 0 {
 		userParam := gocloak.User{
 			Username: instance.Spec.UserName,
+			Enabled:  true,
 		}
 		id, err := r.kcClient.CreateUser(instance.Spec.Realm, userParam)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
 		user, err = r.kcClient.GetUserByID(instance.Spec.Realm, id)
+		if err != nil {
+			return reconcile.Result{}, err
+		}
+
+		passwordSecret := v1.Secret{}
+		err = r.Get(context.TODO(), types.NamespacedName{Name: "test", Namespace: "default"}, &passwordSecret)
+		if err != nil {
+			fmt.Println(err.Error())
+			return reconcile.Result{}, err
+		}
+		password := string(passwordSecret.Data["password"])
+		fmt.Printf("password: %s\n", password)
+
+		err = r.kcClient.SetPassword(instance.Spec.Realm, id, password)
 		if err != nil {
 			return reconcile.Result{}, err
 		}

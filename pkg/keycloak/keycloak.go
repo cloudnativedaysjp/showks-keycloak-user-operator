@@ -9,6 +9,7 @@ type KeyCloakClientInterface interface {
 	GetUserByID(realm string, id string) (*gocloak.User, error)
 	CreateUser(realm string, user gocloak.User) (string, error)
 	DeleteUser(realm string, id string) error
+	SetPassword(realm string, id string, password string) error
 }
 
 func NewClient(basePath string, username string, password string, realm string) (KeyCloakClientInterface, error) {
@@ -57,5 +58,14 @@ func (c *KeyCloak) DeleteUser(realm string, id string) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (c *KeyCloak) SetPassword(realm string, id string, password string) error {
+	err := c.client.SetPassword(c.token.AccessToken, id, realm, password, false)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
