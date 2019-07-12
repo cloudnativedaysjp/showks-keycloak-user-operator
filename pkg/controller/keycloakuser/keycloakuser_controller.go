@@ -160,11 +160,9 @@ func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.
 		passwordSecret := v1.Secret{}
 		err = r.Get(context.TODO(), types.NamespacedName{Name: "test", Namespace: "default"}, &passwordSecret)
 		if err != nil {
-			fmt.Println(err.Error())
 			return reconcile.Result{}, err
 		}
 		password := string(passwordSecret.Data["password"])
-		fmt.Printf("password: %s\n", password)
 
 		err = r.kcClient.SetPassword(instance.Spec.Realm, id, password)
 		if err != nil {
