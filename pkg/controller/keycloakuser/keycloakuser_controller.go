@@ -113,6 +113,7 @@ type ReconcileKeyCloakUser struct {
 // +kubebuilder:rbac:groups=apps,resources=deployments/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=showks.cloudnativedays.jp,resources=keycloakusers,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=showks.cloudnativedays.jp,resources=keycloakusers/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=core,resources=secret,verbs=get
 func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	fmt.Println("Reconcile")
 	// Fetch the KeyCloakUser instance
