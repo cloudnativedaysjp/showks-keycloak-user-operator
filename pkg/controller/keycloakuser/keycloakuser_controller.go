@@ -23,7 +23,7 @@ import (
 	showksv1beta1 "github.com/cloudnativedaysjp/showks-keycloak-user-operator/pkg/apis/showks/v1beta1"
 	"github.com/cloudnativedaysjp/showks-keycloak-user-operator/pkg/keycloak"
 	appsv1 "k8s.io/api/apps/v1"
-	"k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -157,7 +157,7 @@ func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.
 			return reconcile.Result{}, err
 		}
 
-		passwordSecret := v1.Secret{}
+		passwordSecret := corev1.Secret{}
 		err = r.Get(context.TODO(), types.NamespacedName{Name: "test", Namespace: "default"}, &passwordSecret)
 		if err != nil {
 			return reconcile.Result{}, err

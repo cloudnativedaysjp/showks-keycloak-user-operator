@@ -21,7 +21,7 @@ import (
 	"github.com/cloudnativedaysjp/showks-keycloak-user-operator/pkg/keycloak"
 	"github.com/cloudnativedaysjp/showks-keycloak-user-operator/pkg/mock"
 	"github.com/golang/mock/gomock"
-	"k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 	"os"
 	"testing"
 	"time"
@@ -86,7 +86,7 @@ func TestReconcile(t *testing.T) {
 		},
 	}
 
-	passwordSecret := &v1.Secret{
+	passwordSecret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "test",
 			Namespace: "default",
