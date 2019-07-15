@@ -21,6 +21,7 @@ import (
 	"github.com/cloudnativedaysjp/showks-keycloak-user-operator/pkg/keycloak"
 	"github.com/cloudnativedaysjp/showks-keycloak-user-operator/pkg/mock"
 	"github.com/golang/mock/gomock"
+	corev1 "k8s.io/api/core/v1"
 	"os"
 	"testing"
 	"time"
@@ -46,6 +47,7 @@ const timeout = time.Second * 5
 var realm = "master"
 var userName = "dummyUser"
 var userID = "DUMMYDUMMY"
+var userPassword = "DUMMYPASSWORD"
 
 func newKeyCloakClientMock(controller *gomock.Controller) keycloak.KeyCloakClientInterface {
 	c := mock_keycloak.NewMockKeyCloakClientInterface(controller)
@@ -61,8 +63,10 @@ func newKeyCloakClientMock(controller *gomock.Controller) keycloak.KeyCloakClien
 	c.EXPECT().GetUsers(realm, param).Return(users, nil).After(first).Times(1)
 	userParam := gocloak.User{
 		Username: userName,
+		Enabled:  true,
 	}
 	c.EXPECT().CreateUser(realm, userParam).Return(userID, nil).Times(1)
+	c.EXPECT().SetPassword(realm, userID, userPassword).Return(nil).Times(1)
 	user := &gocloak.User{Username: userName, ID: userID}
 	c.EXPECT().GetUserByID(realm, userID).Return(user, nil).Times(1)
 
@@ -77,11 +81,21 @@ func TestReconcile(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: showksv1beta1.KeyCloakUserSpec{
-			UserName: userName,
-			Realm:    realm,
+			UserName:           userName,
+			Realm:              realm,
+			PasswordSecretName: "test",
 		},
 	}
 
+	passwordSecret := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test",
+			Namespace: "default",
+		},
+		Data: map[string][]byte{
+			"password": []byte(userPassword),
+		},
+	}
 	// Setup the Manager and Controller.  Wrap the Controller Reconcile function so it writes each request to a
 	// channel when it is finished.
 	mgr, err := manager.New(cfg, manager.Options{})
@@ -103,6 +117,14 @@ func TestReconcile(t *testing.T) {
 		close(stopMgr)
 		mgrStopped.Wait()
 	}()
+
+	err = c.Create(context.TODO(), passwordSecret)
+	// The instance object may not be a valid object because it might be missing some required fields.
+	// Please modify the instance object by adding required fields and then remove the following if statement.
+	if apierrors.IsInvalid(err) {
+		t.Logf("failed to create object, got an invalid object error: %v", err)
+		return
+	}
 
 	// Create the KeyCloakUser object and expect the Reconcile and Deployment to be created
 	err = c.Create(context.TODO(), instance)

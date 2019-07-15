@@ -91,3 +91,17 @@ func (mr *MockKeyCloakClientInterfaceMockRecorder) DeleteUser(realm, id interfac
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockKeyCloakClientInterface)(nil).DeleteUser), realm, id)
 }
+
+// SetPassword mocks base method
+func (m *MockKeyCloakClientInterface) SetPassword(realm, id, password string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetPassword", realm, id, password)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetPassword indicates an expected call of SetPassword
+func (mr *MockKeyCloakClientInterfaceMockRecorder) SetPassword(realm, id, password interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPassword", reflect.TypeOf((*MockKeyCloakClientInterface)(nil).SetPassword), realm, id, password)
+}

@@ -30,6 +30,8 @@ spec:
           type: object
         spec:
           properties:
+            passwordSecretName:
+              type: string
             realm:
               type: string
             username:

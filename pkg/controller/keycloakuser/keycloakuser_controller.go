@@ -23,8 +23,10 @@ import (
 	showksv1beta1 "github.com/cloudnativedaysjp/showks-keycloak-user-operator/pkg/apis/showks/v1beta1"
 	"github.com/cloudnativedaysjp/showks-keycloak-user-operator/pkg/keycloak"
 	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	"os"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
@@ -111,6 +113,7 @@ type ReconcileKeyCloakUser struct {
 // +kubebuilder:rbac:groups=apps,resources=deployments/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=showks.cloudnativedays.jp,resources=keycloakusers,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=showks.cloudnativedays.jp,resources=keycloakusers/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=core,resources=secret,verbs=get
 func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	fmt.Println("Reconcile")
 	// Fetch the KeyCloakUser instance
@@ -144,12 +147,25 @@ func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.
 	if len(*users) == 0 {
 		userParam := gocloak.User{
 			Username: instance.Spec.UserName,
+			Enabled:  true,
 		}
 		id, err := r.kcClient.CreateUser(instance.Spec.Realm, userParam)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
 		user, err = r.kcClient.GetUserByID(instance.Spec.Realm, id)
+		if err != nil {
+			return reconcile.Result{}, err
+		}
+
+		passwordSecret := corev1.Secret{}
+		err = r.Get(context.TODO(), types.NamespacedName{Name: instance.Spec.PasswordSecretName, Namespace: instance.Namespace}, &passwordSecret)
+		if err != nil {
+			return reconcile.Result{}, err
+		}
+		password := string(passwordSecret.Data["password"])
+
+		err = r.kcClient.SetPassword(instance.Spec.Realm, id, password)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
