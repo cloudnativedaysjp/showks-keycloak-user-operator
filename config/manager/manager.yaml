@@ -54,6 +54,26 @@ spec:
                 fieldPath: metadata.namespace
           - name: SECRET_NAME
             value: $(WEBHOOK_SECRET_NAME)
+          - name: KEYCLOAK_BASE_PATH
+            valueFrom:
+              secretKeyRef:
+                name: controller-manager
+                key: KEYCLOAK_BASE_PATH
+          - name: KEYCLOAK_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: controller-manager
+                key: KEYCLOAK_USERNAME
+          - name: KEYCLOAK_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: controller-manager
+                key: KEYCLOAK_PASSWORD
+          - name: KEYCLOAK_REALM
+            valueFrom:
+              secretKeyRef:
+                name: controller-manager
+                key: KEYCLOAK_REALM
         resources:
           limits:
             cpu: 100m
