@@ -1,6 +1,6 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= cloudnativedaysjp/keycloak-user-operator:latest
 
 all: test manager
 
