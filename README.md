@@ -25,7 +25,7 @@ metadata:
   name: keycloakuser-sample
 spec:
   username: alice
-  password: XXXXXX
+  passwordSecretName: XXXXXX
   realm: master
 ```
 
