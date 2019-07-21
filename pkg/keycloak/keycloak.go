@@ -19,18 +19,26 @@ func NewClient(basePath string, username string, password string, realm string) 
 		return nil, err
 	}
 	return &KeyCloak{
-		client: client,
-		token:  token,
+		client:   client,
+		username: username,
+		password: password,
+		token:    token,
 	}, nil
 }
 
 type KeyCloak struct {
-	client gocloak.GoCloak
-	token  *gocloak.JWT
+	client   gocloak.GoCloak
+	username string
+	password string
+	token    *gocloak.JWT
 }
 
 func (c *KeyCloak) GetUsers(realm string, param gocloak.GetUsersParams) (*[]gocloak.User, error) {
-	users, err := c.client.GetUsers(c.token.AccessToken, realm, param)
+	token, err := c.client.LoginAdmin(c.username, c.password, realm)
+	if err != nil {
+		return nil, err
+	}
+	users, err := c.client.GetUsers(token.AccessToken, realm, param)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +46,11 @@ func (c *KeyCloak) GetUsers(realm string, param gocloak.GetUsersParams) (*[]gocl
 }
 
 func (c *KeyCloak) GetUserByID(realm string, id string) (*gocloak.User, error) {
-	user, err := c.client.GetUserByID(c.token.AccessToken, realm, id)
+	token, err := c.client.LoginAdmin(c.username, c.password, realm)
+	if err != nil {
+		return nil, err
+	}
+	user, err := c.client.GetUserByID(token.AccessToken, realm, id)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +58,11 @@ func (c *KeyCloak) GetUserByID(realm string, id string) (*gocloak.User, error) {
 }
 
 func (c *KeyCloak) CreateUser(realm string, user gocloak.User) (string, error) {
-	id, err := c.client.CreateUser(c.token.AccessToken, realm, user)
+	token, err := c.client.LoginAdmin(c.username, c.password, realm)
+	if err != nil {
+		return "", err
+	}
+	id, err := c.client.CreateUser(token.AccessToken, realm, user)
 	if err != nil {
 		return "", err
 	}
@@ -54,7 +70,11 @@ func (c *KeyCloak) CreateUser(realm string, user gocloak.User) (string, error) {
 }
 
 func (c *KeyCloak) DeleteUser(realm string, id string) error {
-	err := c.client.DeleteUser(c.token.AccessToken, realm, id)
+	token, err := c.client.LoginAdmin(c.username, c.password, realm)
+	if err != nil {
+		return err
+	}
+	err = c.client.DeleteUser(token.AccessToken, realm, id)
 	if err != nil {
 		return err
 	}
@@ -62,7 +82,11 @@ func (c *KeyCloak) DeleteUser(realm string, id string) error {
 }
 
 func (c *KeyCloak) SetPassword(realm string, id string, password string) error {
-	err := c.client.SetPassword(c.token.AccessToken, id, realm, password, false)
+	token, err := c.client.LoginAdmin(c.username, c.password, realm)
+	if err != nil {
+		return err
+	}
+	err = c.client.SetPassword(token.AccessToken, id, realm, password, false)
 	if err != nil {
 		return err
 	}
