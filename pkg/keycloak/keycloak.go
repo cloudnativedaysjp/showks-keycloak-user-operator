@@ -1,7 +1,6 @@
 package keycloak
 
 import (
-	"fmt"
 	"github.com/Nerzal/gocloak"
 )
 
@@ -63,7 +62,6 @@ func (c *KeyCloak) CreateUser(realm string, user gocloak.User) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("token: %+v\n", token)
 	id, err := c.client.CreateUser(token.AccessToken, realm, user)
 	if err != nil {
 		return "", err
