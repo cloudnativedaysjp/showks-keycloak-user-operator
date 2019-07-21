@@ -126,10 +126,12 @@ func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.
 			return reconcile.Result{}, nil
 		}
 		// Error reading the object - requeue the request.
+		log.Error(err, "Failed to get user", "NamespacedName", request.NamespacedName.String())
 		return reconcile.Result{}, err
 	}
 	if instance.ObjectMeta.DeletionTimestamp.IsZero() {
 		if err := r.setFinalizer(instance); err != nil {
+			log.Error(err, "Failed to set finalizer", "user", instance.Spec.UserName)
 			return reconcile.Result{}, err
 		}
 	} else {
@@ -151,22 +153,26 @@ func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.
 		}
 		id, err := r.kcClient.CreateUser(instance.Spec.Realm, userParam)
 		if err != nil {
+			log.Error(err, "Failed to create user", "user", instance.Spec.UserName)
 			return reconcile.Result{}, err
 		}
 		user, err = r.kcClient.GetUserByID(instance.Spec.Realm, id)
 		if err != nil {
+			log.Error(err, "Failed to get user by id", "id", id)
 			return reconcile.Result{}, err
 		}
 
 		passwordSecret := corev1.Secret{}
 		err = r.Get(context.TODO(), types.NamespacedName{Name: instance.Spec.PasswordSecretName, Namespace: instance.Namespace}, &passwordSecret)
 		if err != nil {
+			log.Error(err, "Failed to get secret", "user", types.NamespacedName{Name: instance.Spec.PasswordSecretName, Namespace: instance.Namespace}.String())
 			return reconcile.Result{}, err
 		}
 		password := string(passwordSecret.Data["password"])
 
 		err = r.kcClient.SetPassword(instance.Spec.Realm, id, password)
 		if err != nil {
+			log.Error(err, "Failed to set password", "user", instance.Spec.UserName)
 			return reconcile.Result{}, err
 		}
 	} else {
@@ -177,6 +183,7 @@ func (r *ReconcileKeyCloakUser) Reconcile(request reconcile.Request) (reconcile.
 	instance.Status.ID = user.ID
 
 	if err := r.Status().Update(context.Background(), instance); err != nil {
+		log.Error(err, "Failed to update instance", "user", instance.Spec.UserName)
 		return reconcile.Result{}, err
 	}
 
@@ -199,6 +206,7 @@ func (r *ReconcileKeyCloakUser) runFinalizer(instannce *showksv1beta1.KeyCloakUs
 	fmt.Println("runFinalizer")
 	if containsString(instannce.ObjectMeta.Finalizers, finalizerName) {
 		if err := r.deleteExternalDependency(instannce); err != nil {
+			fmt.Printf("Failed to delete: %s\n", err)
 			return reconcile.Result{}, err
 		}
 
